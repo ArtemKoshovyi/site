@@ -1,11 +1,13 @@
+// app/components/Header.tsx
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../page.module.css";
 import { FaInstagram, FaFacebookF, FaYoutube, FaTelegramPlane } from "react-icons/fa";
 import { FiMoon, FiSun, FiSearch } from "react-icons/fi";
 import type { Category } from "../../lib/directus";
+import { getWeatherByIP } from "../../lib/weather";
 
 function categoryHref(cat: Category) {
   return cat.slug ? `/category/${cat.slug}` : `/category/${cat.id}`;
@@ -31,12 +33,19 @@ type Weather = {
 type Props = {
   categories?: Category[];
   variant?: HeaderVariant;
-  weather?: Weather;
+  weather?: Weather; // можно передавать, но теперь не обязательно
 };
 
 export default function Header({ categories = [], variant = "full", weather }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+  // погода по ip пользователя (в браузере)
+  const [clientWeather, setClientWeather] = useState<Weather | null>(null);
+
+  useEffect(() => {
+    getWeatherByIP().then(setClientWeather).catch(() => {});
+  }, []);
 
   const categoriesForNav = useMemo(
     () => (Array.isArray(categories) ? categories : []),
@@ -59,9 +68,9 @@ export default function Header({ categories = [], variant = "full", weather }: P
     if (current !== theme) document.documentElement.dataset.theme = theme;
   }
 
-  const cityLabel = weather?.city ?? "Варшава";
-  const tempLabel =
-    weather?.temperature != null ? `${Math.round(weather.temperature)}°` : "+2°";
+  const w = clientWeather ?? weather;
+  const cityLabel = w?.city ?? "Варшава";
+  const tempLabel = w?.temperature != null ? `${Math.round(w.temperature)}°` : "+2°";
 
   return (
     <header className={styles.header}>
@@ -146,12 +155,14 @@ export default function Header({ categories = [], variant = "full", weather }: P
                 <Link href="/" className={styles.navLink}>
                   головна
                 </Link>
+
                 {categoriesForNav.map((cat) => (
                   <Link key={cat.id} href={categoryHref(cat)} className={styles.navLink}>
                     {cat.name}
                   </Link>
                 ))}
-                 <Link href="/about" className={styles.navLink}>
+
+                <Link href="/about" className={styles.navLink}>
                   про нас
                 </Link>
               </nav>
@@ -185,7 +196,7 @@ export default function Header({ categories = [], variant = "full", weather }: P
                   головна
                 </Link>
 
-                                {categoriesForNav.map((cat) => (
+                {categoriesForNav.map((cat) => (
                   <Link
                     key={cat.id}
                     href={categoryHref(cat)}
@@ -195,7 +206,12 @@ export default function Header({ categories = [], variant = "full", weather }: P
                     {cat.name}
                   </Link>
                 ))}
-                <Link href="/about" className={styles.navLink} onClick={() => setMenuOpen(false)}>
+
+                <Link
+                  href="/about"
+                  className={styles.navLink}
+                  onClick={() => setMenuOpen(false)}
+                >
                   про нас
                 </Link>
               </nav>
