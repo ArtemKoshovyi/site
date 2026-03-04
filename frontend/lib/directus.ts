@@ -23,7 +23,7 @@ export type PageItem = {
   content?: string | null;
   status?: string | null;
 };
-const BASE_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL ?? "http://localhost:8055";
+const BASE_URL = process.env.NEXT_PUBLIC_DIRECTUS_URL!;
 const NEWS_COLLECTION = process.env.NEXT_PUBLIC_NEWS_COLLECTION ?? "News";
 
 function buildUrl(path: string, params: Record<string, string> = {}) {
