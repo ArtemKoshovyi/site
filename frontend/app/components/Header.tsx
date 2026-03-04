@@ -99,7 +99,7 @@ export default function Header({ categories = [], variant = "full", weather }: P
             </Link>
 
             <a
-              href="https://www.facebook.com/share/1F3Ga9h2Xs/"
+              href=""
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -108,7 +108,7 @@ export default function Header({ categories = [], variant = "full", weather }: P
               <FaFacebookF />
             </a>
             <a
-              href="https://instagram.com/"
+              href=""
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
@@ -117,7 +117,7 @@ export default function Header({ categories = [], variant = "full", weather }: P
               <FaInstagram />
             </a>
             <a
-              href="https://youtube.com/"
+              href=""
               target="_blank"
               rel="noreferrer"
               aria-label="YouTube"
@@ -126,7 +126,7 @@ export default function Header({ categories = [], variant = "full", weather }: P
               <FaYoutube />
             </a>
             <a
-              href="https://t.me/"
+              href=""
               target="_blank"
               rel="noreferrer"
               aria-label="Telegram"
