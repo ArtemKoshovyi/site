@@ -7,10 +7,10 @@ export default async function EventsPage() {
 
   return (
     <main className={styles.container}>
-      <h1 className={styles.h1}>заходи</h1>
+      <h1 className={styles.h1}>Заходи</h1>
 
       {events.length === 0 ? (
-        <div className={styles.empty}>поки що немає опублікованих заходів</div>
+        <div className={styles.empty}>Поки що немає опублікованих заходів</div>
       ) : (
         <div className={styles.list}>
           {events.map((e) => {

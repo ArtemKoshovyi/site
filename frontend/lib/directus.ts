@@ -8,6 +8,8 @@ export type NewsItem = {
   published_at?: string | null;
   cover_image?: string | null;
   is_featured?: boolean | null;
+  status?: "draft" | "published" | "archived" | string | null;
+
 };
 
 export type Category = {
@@ -40,20 +42,23 @@ export function assetUrl(fileId?: string | null) {
 }
 
 export async function getHeroNews() {
-  const res = await fetch(`${BASE_URL}/items/News?filter[is_hero][_eq]=true&limit=1`);
+  const res = await fetch(
+    `${BASE_URL}/items/News?filter[is_hero][_eq]=true&filter[status][_eq]=published&limit=1`,
+    { cache: "no-store" }
+  );
 
   const json = await res.json();
   return json.data?.[0] ?? null;
 }
 export async function getTopNews() {
   const res = await fetch(
-    `${BASE_URL}/items/News?filter[is_top][_eq]=true&sort=-published_at&limit=6`
+    `${BASE_URL}/items/News?filter[is_top][_eq]=true&filter[status][_eq]=published&sort=-published_at&limit=6`,
+    { cache: "no-store" }
   );
 
   const json = await res.json();
   return json.data ?? [];
 }
-
 async function fetchItems<T>(
   collection: string,
   params: Record<string, string>
@@ -80,25 +85,26 @@ async function fetchItems<T>(
 
 export async function getNewsList(): Promise<NewsItem[]> {
   return fetchItems<NewsItem>(NEWS_COLLECTION, {
-    fields: "id,title,slug,excerpt,published_at,cover_image",
+    fields: "id,title,slug,excerpt,published_at,cover_image,status",
+    "filter[status][_eq]": "published",
     sort: "-published_at",
     limit: "20",
   });
 }
-
 export async function getFeaturedNews(): Promise<NewsItem[]> {
   return fetchItems<NewsItem>(NEWS_COLLECTION, {
-    fields: "id,title,slug,published_at,cover_image",
+    fields: "id,title,slug,published_at,cover_image,status",
     "filter[is_featured][_eq]": "true",
+    "filter[status][_eq]": "published",
     sort: "-published_at",
     limit: "5",
   });
 }
-
 export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   const items = await fetchItems<NewsItem>(NEWS_COLLECTION, {
-    fields: "id,title,slug,excerpt,content,published_at,cover_image",
+    fields: "id,title,slug,excerpt,content,published_at,cover_image,status",
     "filter[slug][_eq]": slug,
+    "filter[status][_eq]": "published",
     limit: "1",
   });
   return items[0] ?? null;
@@ -112,16 +118,15 @@ export async function getCategories(): Promise<Category[]> {
     limit: "100",
   });
 }
-
 export async function getNewsByCategory(categorySlug: string): Promise<NewsItem[]> {
   return fetchItems<NewsItem>(NEWS_COLLECTION, {
-    fields: "id,title,slug,excerpt,published_at,cover_image",
+    fields: "id,title,slug,excerpt,published_at,cover_image,status",
     "filter[category][slug][_eq]": categorySlug,
+    "filter[status][_eq]": "published",
     sort: "-published_at",
     limit: "50",
   });
 }
-
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
   const items = await fetchItems<Category>("categories", {
     fields: "id,slug,name",
@@ -132,7 +137,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 }
 
 export async function getPageBySlug(slug: string): Promise<PageItem | null> {
-  const items = await fetchItems<PageItem>("Pages", {
+  const items = await fetchItems<PageItem>("pages", {
     fields: "id,title,slug,content,status",
     "filter[slug][_eq]": slug,
     "filter[status][_eq]": "published",
@@ -152,10 +157,10 @@ export async function searchNews(query: string): Promise<NewsItem[]> {
 
   // беремо пачку новин без фільтра з бази
   const items = await fetchItems<NewsItem>(NEWS_COLLECTION, {
-    // тут спеціально беремо контент, бо по ньому теж шукаємо
-    fields: "id,title,slug,excerpt,content,published_at,cover_image",
-    sort: "-published_at",
-    limit: "200", // якщо мало — постав 500
+  fields: "id,title,slug,excerpt,content,published_at,cover_image,status",
+  "filter[status][_eq]": "published",
+  sort: "-published_at",
+  limit: "200",
   });
 
   // фільтруємо в js (працює з укр/кирилицею нормально)
@@ -185,6 +190,7 @@ export async function getPage(): Promise<PageItem | null> {
   const json = await res.json();
   return json.data ?? null;
 }
+
 type DirectusFile = {
   id: string;
   filename_disk?: string;
