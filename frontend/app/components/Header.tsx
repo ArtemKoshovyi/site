@@ -69,8 +69,8 @@ export default function Header({ categories = [], variant = "full", weather }: P
   }
 
   const w = clientWeather ?? weather;
-  const cityLabel = w?.city ?? "Варшава";
-  const tempLabel = w?.temperature != null ? `${Math.round(w.temperature)}°` : "+2°";
+  const cityLabel = w?.city && w.city !== "Невідомо" ? w.city : "Варшава";
+  const tempLabel = w?.temperature != null ? `${Math.round(w.temperature)}°` : "—";
 
   return (
     <header className={styles.header}>

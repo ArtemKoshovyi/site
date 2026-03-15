@@ -5,36 +5,61 @@ type WeatherResult = {
   temperature: number | null;
 };
 
+type IpApiResponse = {
+  city?: string;
+  latitude?: number;
+  longitude?: number;
+};
+
+type OpenMeteoResponse = {
+  current_weather?: {
+    temperature?: number;
+  };
+};
+
+const FALLBACK_CITY = "Варшава";
+
 export async function getWeatherByIP(): Promise<WeatherResult> {
   try {
-    // 1️⃣ визначаємо місто по IP
     const ipRes = await fetch("https://ipapi.co/json/", {
       cache: "no-store",
     });
 
-    const ipData = await ipRes.json();
+    if (!ipRes.ok) {
+      return { city: FALLBACK_CITY, temperature: null };
+    }
 
-    const city = ipData.city;
+    const ipData = (await ipRes.json()) as IpApiResponse;
+
+    const city = ipData.city?.trim() || FALLBACK_CITY;
     const latitude = ipData.latitude;
     const longitude = ipData.longitude;
 
-    if (!latitude || !longitude) {
-      return { city: "Невідомо", temperature: null };
+    if (latitude == null || longitude == null) {
+      return { city, temperature: null };
     }
 
-    // 2️⃣ отримуємо погоду
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`,
-      { cache: "no-store" }
+      {
+        cache: "no-store",
+      }
     );
 
-    const weatherData = await weatherRes.json();
+    if (!weatherRes.ok) {
+      return { city, temperature: null };
+    }
+
+    const weatherData = (await weatherRes.json()) as OpenMeteoResponse;
 
     return {
       city,
       temperature: weatherData.current_weather?.temperature ?? null,
     };
-  } catch (error) {
-    return { city: "Невідомо", temperature: null };
+  } catch {
+    return {
+      city: FALLBACK_CITY,
+      temperature: null,
+    };
   }
 }
