@@ -270,22 +270,34 @@ html, body {
 }
 
 .cardMedia {
+  position: relative;
   border-radius: 14px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
   aspect-ratio: 4 / 3;
   align-self: start;
-}
 
-:global(html[data-theme="dark"]) .cardMedia {
-  background: rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+  contain: paint;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .cardImg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+:global(html[data-theme="dark"]) .cardMedia {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* sidebar */
@@ -493,6 +505,7 @@ html, body {
 
   .cardMedia {
     order: -1;
+    width: 100%;
   }
 }
 
