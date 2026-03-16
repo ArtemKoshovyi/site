@@ -1,8 +1,8 @@
 /* =========================
-   GLOBAL PAGE TOKENS
+   GLOBAL TOKENS
 ========================= */
 
-.page {
+:global(:root) {
   --max: 1200px;
   --pad: 20px;
 
@@ -13,7 +13,20 @@
 
   --bg: #ffffff;
   --surface: #ffffff;
+}
 
+:global(html[data-theme="dark"]) {
+  --ink: #e5e7eb;
+  --muted: #a1a1aa;
+  --line: rgba(255, 255, 255, 0.14);
+  --bg: #0b1220;
+  --surface: rgba(255, 255, 255, 0.06);
+}
+
+html, body {
+  background: var(--bg);
+}
+.page {
   width: 100%;
   margin: 0;
   padding: 0 0 60px;
@@ -22,267 +35,13 @@
   background: var(--bg);
 }
 
-/* dark theme via Header.tsx: document.documentElement.dataset.theme */
-:global(html[data-theme="dark"]) .page {
-  --ink: #e5e7eb;
-  --muted: #a1a1aa;
-  --line: rgba(255, 255, 255, 0.14);
-  --bg: #0b1220;
-  --surface: rgba(255, 255, 255, 0.06);
-}
-
 .container {
-  
   max-width: var(--max);
   margin: 0 auto;
   padding: 0 var(--pad);
 }
 
-/* =========================
-   HEADER (TOPBAR + STICKY)
-========================= */
 
-.header {
-  margin: 0;
-}
-
-.headerTopbar {
-  background: rgba(15, 23, 42, 0.92);
-  color: #fff;
-}
-
-:global(html[data-theme="dark"]) .headerTopbar {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.headerTopbar .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.topbarLeft {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  opacity: 0.95;
-}
-
-.topbarCity {
-  font-weight: 900;
-}
-
-.topbarWeather {
-  font-weight: 900;
-}
-
-.topbarDot {
-  opacity: 0.6;
-}
-
-.topbarRight {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.iconBtn,
-.iconLink {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.iconBtn {
-  cursor: pointer;
-}
-
-.iconLink {
-  text-decoration: none;
-}
-
-.iconBtn svg,
-.iconLink svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* sticky bar like TCH/TSN */
-.headerBar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-
-.headerBar .container {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 18px;
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-
-/* brand */
-.brandRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--ink);
-  min-width: 0;
-}
-
-.brandLogo {
-  width: 180px;
-  height: auto;
-  flex: 0 0 auto;
-  margin-right: -40px;
-  margin-left: -60px;
-}
-
-.brandName {
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  text-transform: none;
-}
-
-.brandWord {
-  display: block;
-  font-size: 36px;
-}
-
-/* nav */
-.nav {
-  display: inline-flex;
-  justify-content: right;
-  flex-wrap: wrap;
-  gap: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.navLink {
-  
-  font-family: "Libre Baskerville", serif;
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  color: var(--ink);
-  padding: 10px 12px;
-  border-radius: 999px;
-  transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
-}
-
-.navLink:hover {
-  color: var(--accent);
-  background: rgba(0, 51, 102, 0.08);
-  transform: translateY(-1px);
-}
-
-/* right side of header (burger) */
-.headerRight {
-  justify-self: end;
-  display: flex;
-  align-items: center;
-}
-
-/* burger */
-.burger {
-  display: none;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  border-radius: 12px;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.burgerLines {
-  position: relative;
-  width: 18px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 2px;
-}
-
-.burgerLines::before,
-.burgerLines::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 18px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 2px;
-}
-
-.burgerLines::before {
-  top: -6px;
-}
-
-.burgerLines::after {
-  top: 6px;
-}
-
-/* mobile menu */
-.mobileMenu {
-  display: none;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
-}
-
-.mobileMenuOpen {
-  display: block;
-}
-
-.mobileTopbar {
-  padding: 10px var(--pad);
-  border-top: 1px solid var(--line);
-}
-
-.mobileThemeBtn {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-}
-
-.mobileNav {
-  padding: 12px var(--pad) 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerDivider {
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-}
 
 /* =========================
    HERO FULLSCREEN (TSN STYLE)
@@ -716,21 +475,6 @@
   }
 }
 
-@media (max-width: 900px) {
-  .nav {
-    display: none;
-  }
-
-  .burger {
-    display: inline-flex;
-  }
-
-  .headerBar .container {
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-  }
-}
-
 @media (max-width: 768px) {
   .footerInner {
     flex-direction: column;
@@ -804,40 +548,6 @@
   font-size: 14px;
   line-height: 1.6;
 }
-.topOnlyDivider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.08);
-}
-/* було: .page { --max... --pad... } */
 
-/* зроби глобально */
-:global(:root) {
-  --max: 1200px;
-  --pad: 20px;
 
-  --ink: #0b1220;
-  --muted: #667085;
-  --line: rgba(15, 23, 42, 0.12);
-  --accent: #003366;
 
-  --bg: #ffffff;
-  --surface: #ffffff;
-}
-
-:global(html[data-theme="dark"]) {
-  --ink: #e5e7eb;
-  --muted: #a1a1aa;
-  --line: rgba(255, 255, 255, 0.14);
-  --bg: #0b1220;
-  --surface: rgba(255, 255, 255, 0.06);
-}
-
-/* .page тепер просто використовує токени */
-.page {
-  width: 100%;
-  margin: 0;
-  padding: 0 0 60px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: var(--ink);
-  background: var(--bg);
-}

@@ -1,12 +1,17 @@
-// app/components/Header.tsx
 "use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import styles from "../page.module.css";
-import { FaInstagram, FaFacebookF, FaYoutube, FaTelegramPlane } from "react-icons/fa";
+import pageStyles from "../page.module.css";
+import headerStyles from "./Header.module.css";
+import {
+  FaInstagram,
+  FaFacebookF,
+  FaYoutube,
+  FaTelegramPlane,
+} from "react-icons/fa";
 import { FiMoon, FiSun, FiSearch } from "react-icons/fi";
-import type { Category } from "../../lib/directus";
+import type { Category, NewsItem } from "../../lib/directus";
 import { getWeatherByIP } from "../../lib/weather";
 
 function categoryHref(cat: Category) {
@@ -14,15 +19,6 @@ function categoryHref(cat: Category) {
 }
 
 type Theme = "light" | "dark";
-
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = window.localStorage.getItem("theme");
-  if (stored === "light" || stored === "dark") return stored;
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
-  return prefersDark ? "dark" : "light";
-}
-
 type HeaderVariant = "full" | "top";
 
 type Weather = {
@@ -33,14 +29,27 @@ type Weather = {
 type Props = {
   categories?: Category[];
   variant?: HeaderVariant;
-  weather?: Weather; // можно передавать, но теперь не обязательно
+  weather?: Weather;
+  tickerNews?: NewsItem[];
 };
 
-export default function Header({ categories = [], variant = "full", weather }: Props) {
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") return "light";
+  const stored = window.localStorage.getItem("theme");
+  if (stored === "light" || stored === "dark") return stored;
+  const prefersDark =
+    window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
+  return prefersDark ? "dark" : "light";
+}
+
+export default function Header({
+  categories = [],
+  variant = "full",
+  weather,
+  tickerNews = [],
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
-  // погода по ip пользователя (в браузере)
   const [clientWeather, setClientWeather] = useState<Weather | null>(null);
 
   useEffect(() => {
@@ -52,20 +61,25 @@ export default function Header({ categories = [], variant = "full", weather }: P
     [categories]
   );
 
+  const tickerItems = useMemo(() => {
+    return (Array.isArray(tickerNews) ? tickerNews : []).slice(0, 8);
+  }, [tickerNews]);
+
   function applyTheme(next: Theme) {
     setTheme(next);
     try {
       window.localStorage.setItem("theme", next);
       document.documentElement.dataset.theme = next;
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 
-  // sync theme on first paint
   if (typeof document !== "undefined") {
-    const current = (document.documentElement.dataset.theme as Theme | undefined) ?? "light";
-    if (current !== theme) document.documentElement.dataset.theme = theme;
+    const current =
+      (document.documentElement.dataset.theme as Theme | undefined) ?? "light";
+
+    if (current !== theme) {
+      document.documentElement.dataset.theme = theme;
+    }
   }
 
   const w = clientWeather ?? weather;
@@ -73,28 +87,36 @@ export default function Header({ categories = [], variant = "full", weather }: P
   const tempLabel = w?.temperature != null ? `${Math.round(w.temperature)}°` : "—";
 
   return (
-    <header className={styles.header}>
-      <div className={styles.headerTopbar}>
-        <div className={styles.container}>
-          <div className={styles.topbarLeft}>
-            <span className={styles.topbarCity}>{cityLabel}</span>
-            <span className={styles.topbarDot} aria-hidden="true">
+    <header className={headerStyles.header}>
+      <div className={headerStyles.headerTopbar}>
+        <div className={`${pageStyles.container} ${headerStyles.topbarInner}`}>
+          <div className={headerStyles.topbarLeft}>
+            <span className={headerStyles.topbarCity}>{cityLabel}</span>
+            <span className={headerStyles.topbarDot} aria-hidden="true">
               •
             </span>
-            <span className={styles.topbarWeather}>{tempLabel}</span>
+            <span className={headerStyles.topbarWeather}>{tempLabel}</span>
           </div>
 
-          <div className={styles.topbarRight}>
+          <div className={headerStyles.topbarRight}>
             <button
               type="button"
-              className={styles.iconBtn}
-              aria-label={theme === "dark" ? "Увімкнути світлу тему" : "Увімкнути темну тему"}
+              className={headerStyles.iconBtn}
+              aria-label={
+                theme === "dark"
+                  ? "Увімкнути світлу тему"
+                  : "Увімкнути темну тему"
+              }
               onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? <FiSun /> : <FiMoon />}
             </button>
 
-            <Link href="/search" className={styles.iconBtn} aria-label="Пошук">
+            <Link
+              href="/search"
+              className={headerStyles.iconBtn}
+              aria-label="Пошук"
+            >
               <FiSearch />
             </Link>
 
@@ -103,34 +125,37 @@ export default function Header({ categories = [], variant = "full", weather }: P
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
-              className={styles.iconLink}
+              className={headerStyles.iconLink}
             >
               <FaFacebookF />
             </a>
+
             <a
               href=""
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
-              className={styles.iconLink}
+              className={headerStyles.iconLink}
             >
               <FaInstagram />
             </a>
+
             <a
               href=""
               target="_blank"
               rel="noreferrer"
               aria-label="YouTube"
-              className={styles.iconLink}
+              className={headerStyles.iconLink}
             >
               <FaYoutube />
             </a>
+
             <a
               href=""
               target="_blank"
               rel="noreferrer"
               aria-label="Telegram"
-              className={styles.iconLink}
+              className={headerStyles.iconLink}
             >
               <FaTelegramPlane />
             </a>
@@ -140,88 +165,163 @@ export default function Header({ categories = [], variant = "full", weather }: P
 
       {variant === "full" ? (
         <>
-          <div className={styles.headerBar}>
-            <div className={styles.container}>
-              <Link href="/" className={styles.brandRow} aria-label="Головна">
-                <img src="/emblem.svg" alt="" className={styles.brandLogo} />
-                <span className={styles.brandName} aria-label="Спілка ветеранів України">
-                  <span className={styles.brandWord}>Спілка</span>
-                  <span className={styles.brandWord}>Ветеранів</span>
-                  <span className={styles.brandWord}>України</span>
+          <div className={headerStyles.headerBar}>
+            <div className={`${pageStyles.container} ${headerStyles.headerBarInner}`}>
+              <Link href="/" className={headerStyles.brandRow} aria-label="Головна">
+                <img src="/emblem.svg" alt="" className={headerStyles.brandLogo} />
+                <span
+                  className={headerStyles.brandName}
+                  aria-label="Спілка ветеранів України"
+                >
+                  <span className={headerStyles.brandWord}>Спілка</span>
+                  <span className={headerStyles.brandWord}>Ветеранів</span>
+                  <span className={headerStyles.brandWord}>України</span>
                 </span>
               </Link>
 
-              <nav className={styles.nav} aria-label="Категорії">
-                <Link href="/" className={styles.navLink}>
-                  головна
-                </Link>
-
-                {categoriesForNav.map((cat) => (
-                  <Link key={cat.id} href={categoryHref(cat)} className={styles.navLink}>
-                    {cat.name}
-                  </Link>
-                ))}
-
-                <Link href="/about" className={styles.navLink}>
-                  про нас
-                </Link>
-              </nav>
-
-              <div className={styles.headerRight}>
+              <div className={headerStyles.mobileHeaderTitleWrap}>
                 <button
                   type="button"
-                  className={styles.burger}
+                  className={headerStyles.burger}
                   aria-label="Відкрити меню"
                   aria-expanded={menuOpen}
                   onClick={() => setMenuOpen((v) => !v)}
                 >
-                  <span className={styles.burgerLines} aria-hidden="true" />
+                  <span className={headerStyles.burgerLines} aria-hidden="true" />
                 </button>
-              </div>
-            </div>
 
-            <div className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ""}`}>
-              <div className={styles.mobileTopbar}>
+                <Link href="/" className={headerStyles.mobileHeaderTitle}>
+                   <img src="/chrest.svg" className={headerStyles.mobileLogo} />
+                  Спілка Ветеранів України
+                </Link>
+
                 <button
                   type="button"
-                  className={styles.mobileThemeBtn}
+                  className={headerStyles.mobileThemeIconBtn}
+                  aria-label={
+                    theme === "dark"
+                      ? "Увімкнути світлу тему"
+                      : "Увімкнути темну тему"
+                  }
                   onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
                 >
-                  {theme === "dark" ? "Світла тема" : "Темна тема"}
+                  {theme === "dark" ? <FiSun /> : <FiMoon />}
                 </button>
               </div>
 
-              <nav className={styles.mobileNav} aria-label="Категорії (мобільне меню)">
-                <Link href="/" className={styles.navLink} onClick={() => setMenuOpen(false)}>
-                  головна
+              <nav className={headerStyles.nav} aria-label="Категорії">
+                <Link href="/" className={headerStyles.navLink}>
+                  Головна
                 </Link>
 
                 {categoriesForNav.map((cat) => (
                   <Link
                     key={cat.id}
                     href={categoryHref(cat)}
-                    className={styles.navLink}
-                    onClick={() => setMenuOpen(false)}
+                    className={headerStyles.navLink}
                   >
                     {cat.name}
                   </Link>
                 ))}
 
-                <Link
-                  href="/about"
-                  className={styles.navLink}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  про нас
+                <Link href="/about" className={headerStyles.navLink}>
+                  Про нас
                 </Link>
               </nav>
+
+              <div className={headerStyles.headerRight}>
+                <button
+                  type="button"
+                  className={headerStyles.burger}
+                  aria-label="Відкрити меню"
+                  aria-expanded={menuOpen}
+                  onClick={() => setMenuOpen((v) => !v)}
+                >
+                  <span className={headerStyles.burgerLines} aria-hidden="true" />
+                </button>
+              </div>
             </div>
+
+            {tickerItems.length > 0 ? (
+              <div className={headerStyles.mobileTicker} aria-label="Останні новини">
+                <div className={headerStyles.mobileTickerTrack}>
+                  {[...tickerItems, ...tickerItems].map((item, index) => (
+                    <Link
+                      key={`${item.id}-${index}`}
+                      href={`/news/${item.slug}`}
+                      className={headerStyles.mobileTickerItem}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div
+              className={`${headerStyles.mobileMenuOverlay} ${
+                menuOpen ? headerStyles.mobileMenuOverlayOpen : ""
+              }`}
+              onClick={() => setMenuOpen(false)}
+            />
+
+            <aside
+              className={`${headerStyles.mobileMenu} ${
+                menuOpen ? headerStyles.mobileMenuOpen : ""
+              }`}
+            >
+              <div className={headerStyles.mobileMenuHeader}>
+
+                <button
+                  type="button"
+                  className={headerStyles.mobileMenuClose}
+                  aria-label="Закрити меню"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className={headerStyles.mobileMenuBody}>
+                <nav
+                  className={headerStyles.mobileNav}
+                  aria-label="Категорії (мобільне меню)"
+                >
+                  <Link
+                    href="/"
+                    className={headerStyles.mobileNavLink}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span>Головна</span>
+                  </Link>
+
+                  {categoriesForNav.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={categoryHref(cat)}
+                      className={headerStyles.mobileNavLink}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <span>{cat.name}</span>
+                    </Link>
+                  ))}
+
+                  <Link
+                    href="/about"
+                    className={headerStyles.mobileNavLink}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span>Про нас</span>
+                  </Link>
+                </nav>
+              </div>
+            </aside>
           </div>
 
-          <div className={styles.headerDivider} aria-hidden="true" />
+          <div className={headerStyles.headerDivider} aria-hidden="true" />
         </>
       ) : (
-        <div className={styles.topOnlyDivider} aria-hidden="true" />
+        <div className={headerStyles.topOnlyDivider} aria-hidden="true" />
       )}
     </header>
   );
