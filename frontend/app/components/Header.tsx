@@ -191,7 +191,6 @@ export default function Header({
                 </button>
 
                 <Link href="/" className={headerStyles.mobileHeaderTitle}>
-                   <img src="/chrest.svg" className={headerStyles.mobileLogo} />
                   Спілка Ветеранів України
                 </Link>
 
