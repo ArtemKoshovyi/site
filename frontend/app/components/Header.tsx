@@ -168,7 +168,8 @@ export default function Header({
           <div className={headerStyles.headerBar}>
             <div className={`${pageStyles.container} ${headerStyles.headerBarInner}`}>
               <Link href="/" className={headerStyles.brandRow} aria-label="Головна">
-                <img src="/emblem.svg" alt="" className={headerStyles.brandLogo} />
+                
+                
                 <span
                   className={headerStyles.brandName}
                   aria-label="Спілка ветеранів України"
