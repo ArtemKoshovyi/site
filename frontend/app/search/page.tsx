@@ -31,7 +31,9 @@ export default async function SearchPage({ searchParams }: Props) {
               height: 44,
               padding: "0 14px",
               borderRadius: 10,
-              border: "1px solid #e5e7eb",
+              border: "1px solid var(--line)",
+              background: "var(--surface)",
+              color: "var(--ink)",
               outline: "none",
             }}
           />
@@ -42,9 +44,9 @@ export default async function SearchPage({ searchParams }: Props) {
               height: 44,
               padding: "0 16px",
               borderRadius: 10,
-              border: "1px solid #111827",
-              background: "#111827",
-              color: "white",
+              background: "var(--ink)",
+              color: "var(--bg)",
+              border: "1px solid var(--ink)",
               fontWeight: 700,
               cursor: "pointer",
               whiteSpace: "nowrap",
@@ -63,7 +65,7 @@ export default async function SearchPage({ searchParams }: Props) {
         {results.length > 0 && (
           <ul style={{ display: "grid", gap: 12, listStyle: "none", padding: 0 }}>
             {results.map((item) => (
-              <li key={item.id} style={{ borderBottom: "1px solid #eee", paddingBottom: 12 }}>
+              <li key={item.id} style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12 }}>
                 <Link
                   href={`/news/${item.slug}`}
                   style={{ fontWeight: 800, textDecoration: "none" }}

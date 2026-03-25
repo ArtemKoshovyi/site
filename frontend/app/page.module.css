@@ -48,11 +48,10 @@ html, body {
 ========================= */
 
 .heroFull {
-  background-color: red;
   position: relative;
   min-height: calc(100vh - 120px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;   /* центр по вертикалі */
   overflow: hidden;
 }
 
@@ -86,6 +85,10 @@ html, body {
 
 .heroLeft {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 12vh;
+  padding-bottom: 34px;
 }
 
 .heroKicker {
@@ -492,7 +495,9 @@ html, body {
     flex-direction: column;
     align-items: flex-start;
   }
-
+  .heroLeft {
+  padding-top: 0;
+  }
   .footerRight {
     align-items: flex-start;
   }

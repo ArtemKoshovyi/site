@@ -1,328 +1,173 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import pageStyles from "../page.module.css";
-import headerStyles from "./Header.module.css";
+import { useMemo, useState } from "react";
 import {
   FaInstagram,
   FaFacebookF,
   FaYoutube,
   FaTelegramPlane,
 } from "react-icons/fa";
-import { FiMoon, FiSun, FiSearch } from "react-icons/fi";
-import type { Category, NewsItem } from "../../lib/directus";
-import { getWeatherByIP } from "../../lib/weather";
+import { FiMenu, FiSearch, FiX } from "react-icons/fi";
+import headerStyles from "./Header.module.css";
+import type { Category } from "../../lib/directus";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 function categoryHref(cat: Category) {
   return cat.slug ? `/category/${cat.slug}` : `/category/${cat.id}`;
 }
 
-type Theme = "light" | "dark";
-type HeaderVariant = "full" | "top";
-
-type Weather = {
-  city: string;
-  temperature: number | null;
-};
-
 type Props = {
   categories?: Category[];
-  variant?: HeaderVariant;
-  weather?: Weather;
-  tickerNews?: NewsItem[];
 };
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = window.localStorage.getItem("theme");
-  if (stored === "light" || stored === "dark") return stored;
-  const prefersDark =
-    window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
-  return prefersDark ? "dark" : "light";
-}
-
-export default function Header({
-  categories = [],
-  variant = "full",
-  weather,
-  tickerNews = [],
-}: Props) {
+export default function Header({ categories = [] }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [clientWeather, setClientWeather] = useState<Weather | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  useEffect(() => {
-    getWeatherByIP().then(setClientWeather).catch(() => {});
-  }, []);
-
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+  }
   const categoriesForNav = useMemo(
     () => (Array.isArray(categories) ? categories : []),
     [categories]
   );
 
-  const tickerItems = useMemo(() => {
-    return (Array.isArray(tickerNews) ? tickerNews : []).slice(0, 8);
-  }, [tickerNews]);
-
-  function applyTheme(next: Theme) {
-    setTheme(next);
-    try {
-      window.localStorage.setItem("theme", next);
-      document.documentElement.dataset.theme = next;
-    } catch {}
-  }
-
-  if (typeof document !== "undefined") {
-    const current =
-      (document.documentElement.dataset.theme as Theme | undefined) ?? "light";
-
-    if (current !== theme) {
-      document.documentElement.dataset.theme = theme;
-    }
-  }
-
-  const w = clientWeather ?? weather;
-  const cityLabel = w?.city && w.city !== "Невідомо" ? w.city : "Варшава";
-  const tempLabel = w?.temperature != null ? `${Math.round(w.temperature)}°` : "—";
-
   return (
-    <header className={headerStyles.header}>
-      <div className={headerStyles.headerTopbar}>
-        <div className={`${pageStyles.container} ${headerStyles.topbarInner}`}>
-          <div className={headerStyles.topbarLeft}>
-            <span className={headerStyles.topbarCity}>{cityLabel}</span>
-            <span className={headerStyles.topbarDot} aria-hidden="true">
-              •
-            </span>
-            <span className={headerStyles.topbarWeather}>{tempLabel}</span>
-          </div>
-
-          <div className={headerStyles.topbarRight}>
+    <>
+      <header className={headerStyles.header}>
+        <div className={headerStyles.headerInner}>
+          {/* left side */}
+          <div className={headerStyles.leftGroup}>
             <button
               type="button"
-              className={headerStyles.iconBtn}
-              aria-label={
-                theme === "dark"
-                  ? "Увімкнути світлу тему"
-                  : "Увімкнути темну тему"
-              }
-              onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
+              className={headerStyles.iconButton}
+              aria-label="Відкрити меню"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(true)}
             >
-              {theme === "dark" ? <FiSun /> : <FiMoon />}
+              <FiMenu />
             </button>
 
             <Link
               href="/search"
-              className={headerStyles.iconBtn}
+              className={headerStyles.iconButton}
               aria-label="Пошук"
             >
               <FiSearch />
             </Link>
+          </div>
 
+          {/* center logo */}
+          <div className={headerStyles.centerGroup}>
+            <Link href="/" className={headerStyles.logo} aria-label="Головна">
+              <span className={headerStyles.logoMark}></span>
+              <span className={headerStyles.logoText}>Черкаський Жайвір</span>
+            </Link>
+          </div>
+
+          {/* right side socials */}
+          <div className={headerStyles.rightGroup}>
+            <button
+              type="button"
+              aria-label="Toggle theme"
+              className={headerStyles.iconButton}
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? <FiSun /> : <FiMoon />}
+            </button>
             <a
-              href=""
+              href="https://facebook.com"
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
-              className={headerStyles.iconLink}
+              className={headerStyles.socialLink}
             >
               <FaFacebookF />
             </a>
 
             <a
-              href=""
+              href="https://instagram.com"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
-              className={headerStyles.iconLink}
+              className={headerStyles.socialLink}
             >
               <FaInstagram />
             </a>
 
             <a
-              href=""
-              target="_blank"
-              rel="noreferrer"
-              aria-label="YouTube"
-              className={headerStyles.iconLink}
-            >
-              <FaYoutube />
-            </a>
-
-            <a
-              href=""
+              href="https://t.me/"
               target="_blank"
               rel="noreferrer"
               aria-label="Telegram"
-              className={headerStyles.iconLink}
+              className={headerStyles.socialLink}
             >
               <FaTelegramPlane />
             </a>
+
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="YouTube"
+              className={headerStyles.socialLink}
+            >
+              <FaYoutube />
+            </a>
           </div>
         </div>
-      </div>
+      </header>
 
-      {variant === "full" ? (
-        <>
-          <div className={headerStyles.headerBar}>
-            <div className={`${pageStyles.container} ${headerStyles.headerBarInner}`}>
-              <Link href="/" className={headerStyles.brandRow} aria-label="Головна">
-                
-                
-                <span
-                  className={headerStyles.brandName}
-                  aria-label="Спілка ветеранів України"
-                >
-                  <span className={headerStyles.brandWord}>Спілка</span>
-                  <span className={headerStyles.brandWord}>Ветеранів</span>
-                  <span className={headerStyles.brandWord}>України</span>
-                </span>
-              </Link>
+      <div
+        className={`${headerStyles.overlay} ${
+          menuOpen ? headerStyles.overlayOpen : ""
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
 
-              <div className={headerStyles.mobileHeaderTitleWrap}>
-                <button
-                  type="button"
-                  className={headerStyles.burger}
-                  aria-label="Відкрити меню"
-                  aria-expanded={menuOpen}
-                  onClick={() => setMenuOpen((v) => !v)}
-                >
-                  <span className={headerStyles.burgerLines} aria-hidden="true" />
-                </button>
+      <aside
+        className={`${headerStyles.sideMenu} ${
+          menuOpen ? headerStyles.sideMenuOpen : ""
+        }`}
+      >
+        <div className={headerStyles.sideMenuHeader}>
+          <div className={headerStyles.sideMenuTitle}></div>
 
-                <Link href="/" className={headerStyles.mobileHeaderTitle}>
-                  Спілка Ветеранів України
-                </Link>
+          
+        </div>
 
-                <button
-                  type="button"
-                  className={headerStyles.mobileThemeIconBtn}
-                  aria-label={
-                    theme === "dark"
-                      ? "Увімкнути світлу тему"
-                      : "Увімкнути темну тему"
-                  }
-                  onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
-                >
-                  {theme === "dark" ? <FiSun /> : <FiMoon />}
-                </button>
-              </div>
+        <nav className={headerStyles.sideNav} aria-label="Категорії">
+          <Link
+            href="/"
+            className={headerStyles.sideNavLink}
+            onClick={() => setMenuOpen(false)}
+          >
+            Головна
+          </Link>
 
-              <nav className={headerStyles.nav} aria-label="Категорії">
-                <Link href="/" className={headerStyles.navLink}>
-                  Головна
-                </Link>
-
-                {categoriesForNav.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={categoryHref(cat)}
-                    className={headerStyles.navLink}
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
-
-                <Link href="/about" className={headerStyles.navLink}>
-                  Про нас
-                </Link>
-              </nav>
-
-              <div className={headerStyles.headerRight}>
-                <button
-                  type="button"
-                  className={headerStyles.burger}
-                  aria-label="Відкрити меню"
-                  aria-expanded={menuOpen}
-                  onClick={() => setMenuOpen((v) => !v)}
-                >
-                  <span className={headerStyles.burgerLines} aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-
-            {tickerItems.length > 0 ? (
-              <div className={headerStyles.mobileTicker} aria-label="Останні новини">
-                <div className={headerStyles.mobileTickerTrack}>
-                  {[...tickerItems, ...tickerItems].map((item, index) => (
-                    <Link
-                      key={`${item.id}-${index}`}
-                      href={`/news/${item.slug}`}
-                      className={headerStyles.mobileTickerItem}
-                    >
-                      {item.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <div
-              className={`${headerStyles.mobileMenuOverlay} ${
-                menuOpen ? headerStyles.mobileMenuOverlayOpen : ""
-              }`}
+          {categoriesForNav.map((cat) => (
+            <Link
+              key={cat.id}
+              href={categoryHref(cat)}
+              className={headerStyles.sideNavLink}
               onClick={() => setMenuOpen(false)}
-            />
-
-            <aside
-              className={`${headerStyles.mobileMenu} ${
-                menuOpen ? headerStyles.mobileMenuOpen : ""
-              }`}
             >
-              <div className={headerStyles.mobileMenuHeader}>
+              {cat.name}
+            </Link>
+          ))}
 
-                <button
-                  type="button"
-                  className={headerStyles.mobileMenuClose}
-                  aria-label="Закрити меню"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className={headerStyles.mobileMenuBody}>
-                <nav
-                  className={headerStyles.mobileNav}
-                  aria-label="Категорії (мобільне меню)"
-                >
-                  <Link
-                    href="/"
-                    className={headerStyles.mobileNavLink}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <span>Головна</span>
-                  </Link>
-
-                  {categoriesForNav.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={categoryHref(cat)}
-                      className={headerStyles.mobileNavLink}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <span>{cat.name}</span>
-                    </Link>
-                  ))}
-
-                  <Link
-                    href="/about"
-                    className={headerStyles.mobileNavLink}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <span>Про нас</span>
-                  </Link>
-                </nav>
-              </div>
-            </aside>
-          </div>
-
-          <div className={headerStyles.headerDivider} aria-hidden="true" />
-        </>
-      ) : (
-        <div className={headerStyles.topOnlyDivider} aria-hidden="true" />
-      )}
-    </header>
+          <Link
+            href="/about"
+            className={headerStyles.sideNavLink}
+            onClick={() => setMenuOpen(false)}
+          >
+            Про нас
+          </Link>
+        </nav>
+      </aside>
+    </>
   );
 }
