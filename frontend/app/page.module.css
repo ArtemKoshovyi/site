@@ -2,30 +2,7 @@
    GLOBAL TOKENS
 ========================= */
 
-:global(:root) {
-  --max: 1200px;
-  --pad: 20px;
 
-  --ink: #0b1220;
-  --muted: #667085;
-  --line: rgba(15, 23, 42, 0.12);
-  --accent: #003366;
-
-  --bg: #ffffff;
-  --surface: #ffffff;
-}
-
-:global(html[data-theme="dark"]) {
-  --ink: #e5e7eb;
-  --muted: #a1a1aa;
-  --line: rgba(255, 255, 255, 0.14);
-  --bg: #0b1220;
-  --surface: rgba(255, 255, 255, 0.06);
-}
-
-html, body {
-  background: var(--bg);
-}
 .page {
   width: 100%;
   margin: 0;

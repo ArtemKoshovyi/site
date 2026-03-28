@@ -26,7 +26,10 @@
 
 .centerGroup {
   justify-self: center;
-  min-width: 0;
+  min-width: 0;justify-self: center;
+  align-self: center;   /* ← ДОДАЙ ЦЕ */
+  display: flex;        /* ← І ЦЕ */
+  align-items: center;  /* ← І ЦЕ */
 }
 
 .rightGroup {
@@ -82,15 +85,15 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  text-decoration: none;
+  text-decoration: none; display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logoMark {
   width: 28px;
   height: 28px;
   border-radius: 999px;
-  background: #facc15;
-  color: #1d4ed8;
   font-weight: 900;
   font-size: 18px;
   display: inline-flex;
@@ -98,19 +101,14 @@
   justify-content: center;
   line-height: 1;
   flex: 0 0 auto;
-  margin-top: 10px;
 
 }
 
 .logoText {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  transition: color 0.2s ease;
-  justify-content: center;
-  justify-self: center;
-  line-height: 1;
-  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
 }
 
 .overlay {
@@ -188,28 +186,51 @@
   width: 24px;
   height: 24px;
 }
-
 .sideNav {
   display: flex;
   flex-direction: column;
+  gap: 12px;
   padding: 16px 20px 24px;
 }
-
 .sideNavLink {
-  display: block;
-  padding: 14px 0;
-  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* центрируем текст */
+  width: 100%;
+  min-height: 58px;
+  padding: 16px 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: #0f172a;
   text-decoration: none;
-  color: #111827;
-  font-size: 18px;
-  font-weight: 700;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+.sideNavLink::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 18px 0 0 18px;
+}
+.sideNavLink::after {
+  content: "→";
+  position: absolute;
+  right: 16px;
+  opacity: 0.5;
 }
 
 .sideNavLink:hover {
-  color: #1d4ed8;
+  transform: translateX(4px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.09);
+  color: #0f3d75;
 }
-
 /* dark theme */
 
 :global(html[data-theme="dark"]) .header {
@@ -250,12 +271,15 @@
 }
 
 :global(html[data-theme="dark"]) .sideNavLink {
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
   color: #f9fafb;
-  border-bottom: 1px solid #1f2937;
+  border: 1px solid #374151;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }
 
 :global(html[data-theme="dark"]) .sideNavLink:hover {
-  color: #60a5fa;
+  color: #ffffff;
+  background: linear-gradient(180deg, #273449 0%, #1a2436 100%);
 }
 
 /* tablet */
@@ -268,10 +292,12 @@
     gap: 10px;
   }
 
-  .logoText {
-    font-size: 18px;
-    letter-spacing: 0.12em;
-  }
+.logoText {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
 
   .rightGroup {
     gap: 10px;
@@ -294,9 +320,12 @@
     display: none;
   }
 
-  .logoText {
-    font-size: 16px;
-  }
+ .logoText {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
 
   .logoMark {
     width: 24px;
@@ -344,10 +373,16 @@
   .centerGroup {
     justify-self: center;
     min-width: 0;
+    justify-self: center;
+  align-self: center;   /* ← ДОДАЙ ЦЕ */
+  display: flex;        /* ← І ЦЕ */
+  align-items: center;  /* ← І ЦЕ */
   }
 
   .logo {
-    gap: 7px;
+    gap: 7px; display: flex;
+  align-items: center;
+  justify-content: center;
   }
 
   .logoText {
@@ -395,34 +430,23 @@
     
   }
 
-  .sideNav {
-    position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 58px;
-      padding: 16px 18px;
-      border: 1px solid rgba(15,23,42,0.08);
-      border-radius: 18px;
-      background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-      color: #0f172a;
-      text-decoration: none;
-      font-family: Inter, Arial, sans-serif;
-      font-size: 17px;
-      font-weight: 800;
-      box-shadow: 0 8px 22px rgba(15,23,42,0.05);
-      transition: transform .18s ease, box-shadow .18s ease;  }
+.sideNav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 24px;
+}
 
       .sideNavLink::before {
         content: "";
         position: absolute;
-        left: 0;
-        top: 14px;
-        bottom: 14px;
+        left: 12px;      /* вот это двигает правее */
+        top: 0;          /* от самого верха */
+        bottom: 0;       /* до самого низа */
         width: 4px;
         border-radius: 999px;
-        background: linear-gradient(180deg, #0057b7, #ffd700);
-}
+      }
+
   
 }
 :global(html[data-theme="dark"]) .sideNav {
@@ -431,6 +455,8 @@
   border-color: #374151;
 }
 :global(html[data-theme="dark"]) .sideNavLink {
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
   color: #f9fafb;
-  border-bottom: 1px solid #374151;
+  border: 1px solid #374151;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }

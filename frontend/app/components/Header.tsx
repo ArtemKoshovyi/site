@@ -25,11 +25,12 @@ export default function Header({ categories = [] }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
-  }
+function toggleTheme() {
+  const next = theme === "dark" ? "light" : "dark";
+  setTheme(next);
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem("theme", next);
+}
   const categoriesForNav = useMemo(
     () => (Array.isArray(categories) ? categories : []),
     [categories]
@@ -63,8 +64,7 @@ export default function Header({ categories = [] }: Props) {
           {/* center logo */}
           <div className={headerStyles.centerGroup}>
             <Link href="/" className={headerStyles.logo} aria-label="Головна">
-              <span className={headerStyles.logoMark}></span>
-              <span className={headerStyles.logoText}>Черкаський Жайвір</span>
+              <span className={headerStyles.logoText}>Express News</span>
             </Link>
           </div>
 
