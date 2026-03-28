@@ -105,10 +105,11 @@
 }
 
 .logoText {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: #0f172a;
 }
 
 .overlay {
@@ -290,15 +291,17 @@
     padding: 0 14px;
     grid-template-columns: auto 1fr auto;
     gap: 10px;
+      align-items: center;
+
   }
 
 .logoText {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: #0f172a;
 }
-
   .rightGroup {
     gap: 10px;
   }
@@ -320,11 +323,12 @@
     display: none;
   }
 
- .logoText {
-  font-size: 16px;
+.logoText {
+  font-size: 26px;
   font-weight: 900;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: #0f172a;
 }
 
   .logoMark {
@@ -350,6 +354,8 @@
     padding: 0 12px;
     grid-template-columns: 64px 1fr 72px;
     gap: 8px;
+    align-items: center;
+
   }
 
   .leftGroup {
@@ -385,11 +391,14 @@
   justify-content: center;
   }
 
-  .logoText {
-    font-size: 14px;
-    letter-spacing: 0.14em;
-    white-space: nowrap;
-  }
+.logoText {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f172a;
+  white-space: nowrap;
+}
 
   .logoMark {
     width: 22px;
