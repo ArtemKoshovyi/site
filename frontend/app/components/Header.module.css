@@ -4,7 +4,11 @@
   z-index: 60;
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s ease;
+}
+
+.headerHidden {
+  transform: translateY(-100%);
 }
 
 .headerInner {
