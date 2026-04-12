@@ -12,6 +12,13 @@ export default async function RootLayout({
 
   return (
     <html lang="uk">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="4Eys10DTwJ3Xi2c"
+        />
+      </head>
+
       <body>
         <ThemeProvider>
           <Header categories={categories} />
