@@ -681,3 +681,6 @@
 :global(html[data-theme="dark"]) .titleLink:hover {
   color: #dbeafe;
 }
+:global(html[data-theme="dark"]) .sidebarTitle {
+  color: #93c5fd;
+}
