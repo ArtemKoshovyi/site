@@ -70,6 +70,10 @@
   border-left: 4px solid var(--accent);
   padding-left: 16px;
   opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .divider {

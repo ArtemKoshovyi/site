@@ -111,7 +111,7 @@ export default async function Home() {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div>
-            <div className={styles.footerBrand}>Спілка ветеранів</div>
+            <div className={styles.footerBrand}>Express News Україна</div>
             <div className={styles.footerNote}>
               © {new Date().getFullYear()} — всі права захищено
             </div>

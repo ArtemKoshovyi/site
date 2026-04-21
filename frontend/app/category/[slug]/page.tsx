@@ -54,7 +54,6 @@ export default async function CategoryPage({
 
       <div className={styles.main}>
         <section className={styles.feed}>
-          <h2 className={styles.sectionTitle}>Новини категорії</h2>
 
           {news.length === 0 ? (
             <div className={styles.emptyState}>
@@ -101,7 +100,7 @@ export default async function CategoryPage({
         </section>
 
         <aside className={styles.sidebar}>
-          <h3 className={styles.sidebarTitle}>головні новини</h3>
+          <h3 className={styles.sidebarTitle}>важливо</h3>
 
           <div className={styles.featuredList}>
             {sidebarItems.map((item: NewsItem) => {

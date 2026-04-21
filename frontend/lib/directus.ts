@@ -36,15 +36,26 @@ function buildUrl(path: string, params: Record<string, string> = {}) {
   return url.toString();
 }
 
-export function assetUrl(fileId?: string | null) {
-  if (!fileId) return null;
-  return `${BASE_URL}/assets/${fileId}`;
+export function assetUrl(
+  fileId?: string | null,
+  options?: { width?: number; height?: number; quality?: number; fit?: string }
+) {
+  if (!fileId) return "/placeholder.jpg";
+
+  const url = new URL(`/assets/${fileId}`, BASE_URL);
+
+  if (options?.width) url.searchParams.set("width", String(options.width));
+  if (options?.height) url.searchParams.set("height", String(options.height));
+  if (options?.quality) url.searchParams.set("quality", String(options.quality));
+  if (options?.fit) url.searchParams.set("fit", options.fit);
+
+  return url.toString();
 }
 
 export async function getHeroNews() {
   const res = await fetch(
     `${BASE_URL}/items/News?filter[is_hero][_eq]=true&filter[status][_eq]=published&limit=1`,
-    { cache: "no-store" }
+    {next: { revalidate: 60 }}
   );
 
   const json = await res.json();
@@ -53,28 +64,28 @@ export async function getHeroNews() {
 export async function getTopNews() {
   const res = await fetch(
     `${BASE_URL}/items/News?filter[is_top][_eq]=true&filter[status][_eq]=published&sort=-published_at&limit=6`,
-    { cache: "no-store" }
+    { next: { revalidate: 60 }}
   );
 
   const json = await res.json();
   return json.data ?? [];
 }
+
 async function fetchItems<T>(
   collection: string,
   params: Record<string, string>
 ): Promise<T[]> {
   const url = buildUrl(`/items/${collection}`, params);
-  
-  const res = await fetch(url, { 
-    cache: "no-store",
+
+  const res = await fetch(url, {
+    next: { revalidate: 60 },
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
 
   if (!res.ok) {
-    console.error(`!!! Ошибка Directus для коллекции [${collection}]: ${res.status}`);
-    return []; // Возвращаем пустой массив вместо падения страницы
+    throw new Error(`Directus request failed for [${collection}]: ${res.status} ${res.statusText}`);
   }
 
   const json = (await res.json()) as { data?: T[] };
@@ -182,7 +193,7 @@ export async function searchNews(query: string): Promise<NewsItem[]> {
 export async function getPage(): Promise<PageItem | null> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/items/pages`,
-    { cache: "no-store" }
+    {  next: { revalidate: 60 }  }
   );
 
   if (!res.ok) return null;
@@ -217,7 +228,7 @@ export async function getEvents(): Promise<EventItem[]> {
         sort: "-starts_at",
         fields: "id,title,slug,starts_at,status,cover_image,latitude,longitude",
       }),
-    { cache: "no-store" }
+    {  next: { revalidate: 60 }  }
   );
 
   if (!res.ok) return [];
@@ -241,7 +252,7 @@ export async function getEventBySlug(slug: string): Promise<EventItem | null> {
   console.log("clean slug:", JSON.stringify(clean));
   console.log("directus url:", url);
 
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { next: { revalidate: 60 } });
 
   console.log("directus status:", res.status);
 

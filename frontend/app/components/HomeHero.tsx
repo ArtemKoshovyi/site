@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import styles from "../page.module.css";
 import { assetUrl, type NewsItem } from "../../lib/directus";
+import Image from "next/image";
 
 const DATE_LOCALE = "uk-UA";
 
@@ -45,7 +46,17 @@ export default function HomeHero({ hero, topList }: Props) {
 
   return (
     <section className={styles.heroFull} aria-label="Головна новина">
-      <div className={styles.heroBg} style={{ backgroundImage: `url(${bg})` }} />
+      <div className={styles.heroBg}>
+  <Image
+    src={bg}
+    alt={selected.title}
+    fill
+    priority
+    unoptimized
+    className={styles.heroBgImage}
+    sizes="100vw"
+  />
+</div>
       <div className={styles.heroShade} aria-hidden="true" />
 
       <div className={styles.container}>

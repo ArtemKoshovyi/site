@@ -133,10 +133,10 @@ function toggleTheme() {
           menuOpen ? headerStyles.sideMenuOpen : ""
         }`}
       >
+        
         <div className={headerStyles.sideMenuHeader}>
-          <div className={headerStyles.sideMenuTitle}></div>
+            <span className={headerStyles.menuLogo}>EXPRESS NEWS</span>
 
-          
         </div>
 
         <nav className={headerStyles.sideNav} aria-label="Категорії">

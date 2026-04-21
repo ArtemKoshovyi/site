@@ -22,7 +22,7 @@ const FALLBACK_CITY = "Варшава";
 export async function getWeatherByIP(): Promise<WeatherResult> {
   try {
     const ipRes = await fetch("https://ipapi.co/json/", {
-      cache: "no-store",
+       next: { revalidate: 60 } ,
     });
 
     if (!ipRes.ok) {
@@ -42,7 +42,7 @@ export async function getWeatherByIP(): Promise<WeatherResult> {
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`,
       {
-        cache: "no-store",
+         next: { revalidate: 60 } ,
       }
     );
 

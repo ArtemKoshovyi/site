@@ -153,23 +153,25 @@
 }
 
 .sideMenuHeader {
-  background: url("/ornament.svg") no-repeat center;
-  height: 90px;
-  padding: 0 20px;
-  border-bottom: 1px solid #e5e7eb;
+  height: auto;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--line);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: border-color 0.2s ease;
+  flex-direction: column;
+  gap: 4px;
 }
-
 .sideMenuTitle {
   font-size: 20px;
   font-weight: 800;
   color: #111827;
   transition: color 0.2s ease;
 }
-
+.menuLogo {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
 .closeButton {
   width: 42px;
   height: 42px;
@@ -198,23 +200,28 @@
   padding: 16px 20px 24px;
 }
 .sideNavLink {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;  /* центрируем текст */
-  width: 100%;
-  min-height: 58px;
-  padding: 16px 18px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  color: #0f172a;
+  justify-content: space-between;
+
+  padding: 14px 6px;
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+  box-shadow: none;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: var(--ink);
   text-decoration: none;
-  font-family: Inter, Arial, sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+
+  border-bottom: 1px solid var(--line);
+
+  transition: color 0.15s ease, transform 0.1s ease;
 }
+
 .sideNavLink::before {
   content: "";
   position: absolute;
@@ -225,16 +232,22 @@
   border-radius: 18px 0 0 18px;
 }
 .sideNavLink::after {
-  content: "→";
-  position: absolute;
-  right: 16px;
-  opacity: 0.5;
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(-45deg);
+  margin-left: auto;
+}
+.sideNavLink.active {
+  color: var(--accent);
+  font-weight: 800;
 }
 
 .sideNavLink:hover {
+  color: var(--accent);
   transform: translateX(4px);
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.09);
-  color: #0f3d75;
 }
 /* dark theme */
 
