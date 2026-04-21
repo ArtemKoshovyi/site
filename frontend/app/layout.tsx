@@ -14,7 +14,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-    let categories = [];
+  let categories: Awaited<ReturnType<typeof getCategories>> = [];
 
     try {
       categories = await getCategories();
