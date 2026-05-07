@@ -79,7 +79,7 @@ function toggleTheme() {
               {theme === "dark" ? <FiSun /> : <FiMoon />}
             </button>
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/share/1J5z7rhvJu/"
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -89,7 +89,7 @@ function toggleTheme() {
             </a>
 
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/espress_news_che/"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
@@ -99,7 +99,7 @@ function toggleTheme() {
             </a>
 
             <a
-              href="https://t.me/"
+              href="https://t.me/Express_News_city"
               target="_blank"
               rel="noreferrer"
               aria-label="Telegram"
