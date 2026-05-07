@@ -162,7 +162,7 @@ export default async function Home() {
               </a>
 
               <a
-                href="https://t.me/Express_News_city"
+                href="https://t.me/exspress_news"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Telegram"
